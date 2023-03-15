@@ -1,0 +1,10 @@
+numba==0.48.0
+numpy==1.19.5
+nuscenes-devkit
+opencv-python-headless
+pandas
+pytorch-lightning==1.5.10
+scikit-image
+scipy
+setuptools==59.5.0
+tensorboardX
