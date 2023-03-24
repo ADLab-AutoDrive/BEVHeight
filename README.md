@@ -22,7 +22,7 @@
 
 <h2 align="center">CVPR 2023</h2>
   <div align="center">
-    <img src="./assets/teaser_intro.png" alt="Logo" width="88%">
+    <img src="./assets/teaser_intro.jpg" alt="Logo" width="88%">
   </div>
 
 <p align="center">
