@@ -3,6 +3,7 @@ import sys
 import argparse
 import json
 import csv
+import math
 import cv2
 
 import numpy as np
@@ -29,11 +30,45 @@ def copy_file(file_src, file_dest):
             print("Unexpected error:", sys.exc_info())
             exit(1)
 
-def convert_calib(src_calib_file, dest_calib_file):
+def load_denorm(denorm_file):
+    with open(denorm_file, 'r') as f:
+        lines = f.readlines()
+    denorm = np.array([float(item) for item in lines[0].split(' ')])
+    return denorm
+
+def get_cam2velo(denorm_file):
+    denorm = load_denorm(denorm_file)
+    Rx = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, 1.0], [0.0, -1.0, 0.0]])
+    Rz = np.array([[0.0, 1.0, 0.0], [-1.0, 0.0, 0.0], [0.0, 0.0, 1.0]])
+    
+    origin_vector = np.array([0, 1, 0])
+    target_vector = -1 * np.array([denorm[0], denorm[1], denorm[2]])
+    target_vector_norm = target_vector / np.sqrt(target_vector[0]**2 + target_vector[1]**2 + target_vector[2]**2)       
+    sita = math.acos(np.inner(target_vector_norm, origin_vector))
+    n_vector = np.cross(target_vector_norm, origin_vector) 
+    n_vector = n_vector / np.sqrt(n_vector[0]**2 + n_vector[1]**2 + n_vector[2]**2)
+    n_vector = n_vector.astype(np.float32)
+    cam2velo, _ = cv2.Rodrigues(n_vector * sita)
+    cam2velo = cam2velo.astype(np.float32)
+    cam2velo = np.matmul(Rx, cam2velo)
+    cam2velo = np.matmul(Rz, cam2velo)
+    
+    Ax, By, Cz, D = denorm[0], denorm[1], denorm[2], denorm[3]
+    mod_area = np.sqrt(np.sum(np.square([Ax, By, Cz])))
+    d = abs(D) / mod_area
+    Tr_cam2velo = np.eye(4)
+    Tr_cam2velo[:3, :3] = cam2velo
+    Tr_cam2velo[:3, 3] = [0, 0, d]
+    Tr_velo2cam = np.linalg.inv(Tr_cam2velo)
+    return Tr_velo2cam
+
+def convert_calib(src_calib_file, src_denorm_file, dest_calib_file):
     with open(src_calib_file) as f:
         lines = f.readlines()
     obj = lines[0].strip().split(' ')[1:]
     P2 = np.array(obj, dtype=np.float32)
+
+    Tr_velo_to_cam = get_cam2velo(src_denorm_file)
     kitti_calib = dict()
     kitti_calib["P0"] = np.zeros((3, 4))  # Dummy values.
     kitti_calib["P1"] = np.zeros((3, 4))  # Dummy values.
@@ -41,7 +76,7 @@ def convert_calib(src_calib_file, dest_calib_file):
     kitti_calib["P3"] = np.zeros((3, 4))  # Dummy values.
     # Cameras are already rectified.
     kitti_calib["R0_rect"] = np.identity(3)
-    kitti_calib["Tr_velo_to_cam"] = np.zeros((3, 4))  # Dummy values.
+    kitti_calib["Tr_velo_to_cam"] = Tr_velo_to_cam[:3, :]  # Dummy values.
     kitti_calib["Tr_imu_to_velo"] = np.zeros((3, 4))  # Dummy values.
     
     with open(dest_calib_file, "w") as calib_file:
@@ -162,7 +197,7 @@ def main(src_root, dest_root, split='train', img_id=0):
         img = cv2.imread(src_img_file)
         cv2.imwrite(dest_img_file, img)
         # calib
-        convert_calib(src_calib_file, dest_calib_file)
+        convert_calib(src_calib_file, src_denorm_file, dest_calib_file)
         # label
         convert_label(src_label_file, dest_label_file)
         # denorm

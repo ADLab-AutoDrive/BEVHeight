@@ -13,6 +13,12 @@ python scripts/data_converter/dair2kitti.py --source-root data/dair-v2x-i --targ
 python scripts/data_converter/rope2kitti.py --source-root data/rope3d --target-root data/rope3d-kitti
 ```
 
+## Visualize the dataset in KITTI format
+```
+python scripts/data_converter/visual_tools.py --data_root data/rope3d-kitti --demo_dir ./demo
+```
+
+
 The directory will be as follows.
 ```
 BEVHeight
