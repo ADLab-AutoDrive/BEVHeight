@@ -17,7 +17,12 @@ def kitti_visual_tool(data_root, demo_dir):
     for image_file in os.listdir(image_path):
         image_ids.append(image_file.split(".")[0])
     for i in range(len(image_ids)):
-        image_2_file = os.path.join(image_path, str(image_ids[i]) + ".png")
+        if os.path.exists(os.path.join(image_path, str(image_ids[i]) + ".png")):
+            image_2_file = os.path.join(image_path, str(image_ids[i]) + ".png")
+        elif os.path.exists(os.path.join(image_path, str(image_ids[i]) + ".jpg")):
+            image_2_file = os.path.join(image_path, str(image_ids[i]) + ".jpg")
+        else:
+            print("Error: image file not found.")
         calib_file = os.path.join(calib_path, str(image_ids[i]) + ".txt")
         label_2_file = os.path.join(label_path, str(image_ids[i]) + ".txt")
         image = cv2.imread(image_2_file)

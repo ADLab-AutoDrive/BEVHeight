@@ -92,6 +92,7 @@ def draw_3d_box_on_image(image, label_2_file, P2, denorm, c=(0, 255, 0)):
       for line in f.readlines():
           line_list = line.split('\n')[0].split(' ')
           object_type = line_list[0]
+          if object_type not in color_map.keys(): continue
           dim = np.array(line_list[8:11]).astype(float)
           location = np.array(line_list[11:14]).astype(float)
           rotation_y = float(line_list[14])
