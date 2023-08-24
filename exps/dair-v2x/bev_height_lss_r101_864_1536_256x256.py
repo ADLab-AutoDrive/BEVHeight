@@ -30,8 +30,8 @@ data_root = "data/dair-v2x-i/"
 gt_label_path = "data/dair-v2x-i-kitti/training/label_2"
 
 backbone_conf = {
-    'x_bound': [0, 102.4, 0.4],
-    'y_bound': [-51.2, 51.2, 0.4],
+    'x_bound': [0, 140.8, 0.4],
+    'y_bound': [-70.4, 70.4, 0.4],
     'z_bound': [-5, 3, 8],
     'd_bound': [-2.0, 0.0, 90],
     'final_dim':
@@ -118,18 +118,18 @@ common_heads = dict(reg=(2, 2),
 
 bbox_coder = dict(
     type='CenterPointBBoxCoder',
-    post_center_range=[0.0, -61.2, -10.0, 122.4, 61.2, 10.0],
+    post_center_range=[0.0, -70.4, -10.0, 140.8, 70.4, 10.0],
     max_num=500,
     score_threshold=0.1,
     out_size_factor=4,
     voxel_size=[0.1, 0.1, 8],
-    pc_range=[0, -51.2, -5, 104.4, 51.2, 3],
+    pc_range=[0, -70.4, -5, 140.8, 70.4, 3],
     code_size=9,
 )
 
 train_cfg = dict(
-    point_cloud_range=[0, -51.2, -5, 102.4, 51.2, 3],
-    grid_size=[1024, 1024, 1],
+    point_cloud_range=[0, -70.4, -5, 140.8, 70.4, 3],
+    grid_size=[1408, 1408, 1],
     voxel_size=[0.1, 0.1, 8],
     out_size_factor=4,
     dense_reg=1,
@@ -140,7 +140,7 @@ train_cfg = dict(
 )
 
 test_cfg = dict(
-    post_center_limit_range=[0.0, -61.2, -10.0, 122.4, 61.2, 10.0],
+    post_center_limit_range=[0.0, -70.4, -10.0, 140.8, 70.4, 10.0],
     max_per_img=500,
     max_pool_nms=False,
     min_radius=[4, 12, 10, 1, 0.85, 0.175],
@@ -202,7 +202,7 @@ class BEVHeightLightningModel(LightningModule):
                                            current_classes=["Car", "Pedestrian", "Cyclist"],
                                            data_root=data_root,
                                            gt_label_path=gt_label_path,
-                                           output_dir=self.default_root_dir,)
+                                           output_dir=self.default_root_dir)
         self.model = BEVHeight(self.backbone_conf, self.head_conf)
         self.mode = 'valid'
         self.img_conf = img_conf
@@ -396,7 +396,7 @@ def run_cli():
     parser.set_defaults(
         profiler='simple',
         deterministic=False,
-        max_epochs=100,
+        max_epochs=60,
         accelerator='ddp',
         num_sanity_val_steps=0,
         gradient_clip_val=5,

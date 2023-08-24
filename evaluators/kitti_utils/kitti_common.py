@@ -556,13 +556,6 @@ def add_difficulty_to_annos_v2(info):
     annos["difficulty"] = np.array(diff, np.int32)
     return diff
 
-def distance_screen(content, min_z=0, max_z=135):
-    ret_content = []
-    for x in content:
-        if max_z > float(x[13]) and float(x[13]) > min_z:
-            ret_content.append(x)
-    return ret_content
-
 def get_label_anno(label_path):
     annotations = {}
     annotations.update({
@@ -581,7 +574,6 @@ def get_label_anno(label_path):
         content = []
     else:
         content = [line.strip().split(' ') for line in lines]
-    content = distance_screen(content)
     num_objects = len([x[0] for x in content if x[0] != 'DontCare'])
     annotations['name'] = np.array([x[0] for x in content])
     num_gt = len(annotations['name'])
