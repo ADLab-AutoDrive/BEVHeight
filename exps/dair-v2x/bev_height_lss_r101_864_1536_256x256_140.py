@@ -30,8 +30,8 @@ data_root = "data/dair-v2x-i/"
 gt_label_path = "data/dair-v2x-i-kitti/training/label_2"
 
 backbone_conf = {
-    'x_bound': [0, 140.8, 0.8],
-    'y_bound': [-70.4, 70.4, 0.8],
+    'x_bound': [0, 140.8, 0.4],
+    'y_bound': [-70.4, 70.4, 0.4],
     'z_bound': [-5, 3, 8],
     'd_bound': [-2.0, 0.0, 90],
     'final_dim':
@@ -43,11 +43,11 @@ backbone_conf = {
     'img_backbone_conf':
     dict(
         type='ResNet',
-        depth=50,
+        depth=101,
         frozen_stages=0,
         out_indices=[0, 1, 2, 3],
         norm_eval=False,
-        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet50'),
+        init_cfg=dict(type='Pretrained', checkpoint='torchvision://resnet101'),
     ),
     'img_neck_conf':
     dict(
@@ -122,15 +122,15 @@ bbox_coder = dict(
     max_num=500,
     score_threshold=0.1,
     out_size_factor=4,
-    voxel_size=[0.2, 0.2, 8],
+    voxel_size=[0.1, 0.1, 8],
     pc_range=[0, -70.4, -5, 140.8, 70.4, 3],
     code_size=9,
 )
 
 train_cfg = dict(
     point_cloud_range=[0, -70.4, -5, 140.8, 70.4, 3],
-    grid_size=[704, 704, 1],
-    voxel_size=[0.2, 0.2, 8],
+    grid_size=[1408, 1408, 1],
+    voxel_size=[0.1, 0.1, 8],
     out_size_factor=4,
     dense_reg=1,
     gaussian_overlap=0.1,
@@ -146,7 +146,7 @@ test_cfg = dict(
     min_radius=[4, 12, 10, 1, 0.85, 0.175],
     score_threshold=0.1,
     out_size_factor=4,
-    voxel_size=[0.2, 0.2, 8],
+    voxel_size=[0.1, 0.1, 8],
     nms_type='circle',
     pre_max_size=1000,
     post_max_size=83,
@@ -368,14 +368,14 @@ def main(args: Namespace) -> None:
     print(args)
     
     model = BEVHeightLightningModel(**vars(args))
-    checkpoint_callback = ModelCheckpoint(dirpath='./outputs/bev_height_lss_r50_864_1536_128x128/checkpoints', filename='{epoch}', every_n_epochs=5, save_last=True, save_top_k=-1)
+    checkpoint_callback = ModelCheckpoint(dirpath='./outputs/bev_height_lss_r101_864_1536_256x256/checkpoints', filename='{epoch}', every_n_epochs=5, save_last=True, save_top_k=-1)
     trainer = pl.Trainer.from_argparse_args(args, callbacks=[checkpoint_callback])
     if args.evaluate:
         for ckpt_name in os.listdir(args.ckpt_path):
             model_pth = os.path.join(args.ckpt_path, ckpt_name)
             trainer.test(model, ckpt_path=model_pth)
     else:
-        backup_codebase(os.path.join('./outputs/bev_height_lss_r50_864_1536_128x128', 'backup'))
+        backup_codebase(os.path.join('./outputs/bev_height_lss_r101_864_1536_256x256', 'backup'))
         trainer.fit(model)
         
 def run_cli():
@@ -396,14 +396,14 @@ def run_cli():
     parser.set_defaults(
         profiler='simple',
         deterministic=False,
-        max_epochs=60,
+        max_epochs=30,
         accelerator='ddp',
         num_sanity_val_steps=0,
         gradient_clip_val=5,
         limit_val_batches=0,
         enable_checkpointing=True,
         precision=32,
-        default_root_dir='./outputs/bev_height_lss_r50_864_1536_128x128')
+        default_root_dir='./outputs/bev_height_lss_r101_864_1536_256x256')
     args = parser.parse_args()
     main(args)
 

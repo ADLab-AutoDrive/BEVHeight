@@ -84,6 +84,97 @@ Eval BEVHeight with 8 GPUs
 ```
 python [EXP_PATH] --ckpt_path [CKPT_PATH] -e -b 8 --gpus 8
 ```
+# Experimental Results
+
+
+- DAIR-V2X-I Dataset
+<div align=center>
+<table>
+     <tr align=center>
+        <td rowspan="3">Method</td> 
+        <td rowspan="3" align=center>Config File</td> 
+        <td rowspan="3" align=center>Range</td> 
+        <td colspan="3" align=center>Car</td>
+        <td colspan="3" align=center>Pedestrain</td>
+        <td colspan="3" align=center>Cyclist</td>
+        <td rowspan="3" align=center>model pth</td>
+    </tr>
+    <tr align=center>
+        <td colspan="3" align=center>3D@0.5</td>
+        <td colspan="3" align=center>3D@0.25</td>
+        <td colspan="3" align=center>3D@0.25</td>
+    </tr>
+    <tr align=center>
+        <td>Easy</td>
+        <td>Mod.</td>
+        <td>Hard</td>
+        <td>Easy</td>
+        <td>Mod.</td>
+        <td>Hard</td>
+        <td>Easy</td>
+        <td>Mod.</td>
+        <td>Hard</td>
+    </tr>
+    <tr align=center>
+        <td rowspan="4">BEVHeight</td> 
+         <td><a href=exps/dair-v2x/bev_height_lss_r50_864_1536_128x128_102.py>R50_102</td>
+        <td>[0, 102.4]</td> 
+        <td>77.48</td>
+        <td>65.46</td>
+        <td>65.53</td>
+        <td>26.86</td>
+        <td>25.53</td>
+        <td>25.66</td>
+        <td>51.18</td>
+        <td>52.43</td>
+        <td>53.07</td>
+        <td><a href="https://cloud.tsinghua.edu.cn/f/6998b0b000aa45a0861e/?dl=1">model</a></td>
+    </tr>
+    <tr align=center>
+        <td><a href=exps/dair-v2x/bev_height_lss_r50_864_1536_128x128_140.py>R50_140</td>
+        <td>[0, 140.8]</td> 
+        <td>80.80</td>
+        <td>75.23</td>
+        <td>75.31</td>
+        <td>28.13</td>
+        <td>26.73</td>
+        <td>26.88</td>
+        <td>49.63</td>
+        <td>52.27</td>
+        <td>52.98</td>
+        <td><a href="https://cloud.tsinghua.edu.cn/f/4fa0578a8c7347ebb353/?dl=1">model</a></td>
+    </tr>
+    <tr align=center>
+        <td><a href=exps/dair-v2x/bev_height_lss_r101_864_1536_256x256_102.py>R101_102</td>
+        <td>[0, 102.4]</td> 
+        <td>78.06</td>
+        <td>65.94</td>
+        <td>65.99</td>
+        <td>40.45</td>
+        <td>38.70</td>
+        <td>38.82</td>
+        <td>57.61</td>
+        <td>59.90</td>
+        <td>60.39</td>
+        <td><a href="https://cloud.tsinghua.edu.cn/f/acd81d6083b742ddbb64/?dl=1">model</a></td>
+    </tr>
+    <tr align=center>
+        <td><a href=exps/dair-v2x/bev_height_lss_r101_864_1536_256x256_140.py>R101_140</td>
+        <td>[0, 140.8]</td> 
+        <td>81.80</td>
+        <td>76.19</td>
+        <td>76.26</td>
+        <td>38.79</td>
+        <td>37.94</td>
+        <td>38.26</td>
+        <td>58.22</td>
+        <td>60.49</td>
+        <td>61.03</td>
+        <td><a href="https://cloud.tsinghua.edu.cn/f/9a0f179055724f5db6a3/?dl=1">model</a></td>
+    </tr>
+    
+</table>
+</div>
 
 # Acknowledgment
 This project is not possible without the following codebases.
