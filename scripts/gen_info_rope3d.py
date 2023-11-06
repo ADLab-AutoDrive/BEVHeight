@@ -215,12 +215,13 @@ def main():
     rope3d_root = "data/rope3d"
     train_infos = generate_info_rope3d(rope3d_root, split='train')
     val_infos = generate_info_rope3d(rope3d_root, split='val')
+
     total_infos = train_infos + val_infos
     random.shuffle(total_infos)
     train_infos = total_infos[:int(0.7 * len(total_infos))]
     val_infos = total_infos[int(0.7 * len(total_infos)):]
-    mmcv.dump(train_infos, './data/rope3d/rope3d_12hz_infos_train.pkl')
-    mmcv.dump(train_infos, './data/rope3d/rope3d_12hz_infos_val.pkl')
+    mmcv.dump(train_infos, './data/rope3d/rope3d_12hz_infos_hom_train.pkl')
+    mmcv.dump(val_infos, './data/rope3d/rope3d_12hz_infos_hom_val.pkl')
 
 if __name__ == '__main__':
     main()
