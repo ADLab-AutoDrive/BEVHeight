@@ -42,7 +42,7 @@ line by a margin of 4.85% and 4.43% on **DAIR-V2X-I** and **Rope3D** benchmarks 
 
 
 # News
-
+- [2024/05] BEVHeight is integrated into **NVIDIA [DeepStream-3D](https://docs.nvidia.com/metropolis/deepstream/dev-guide/text/DS_3D_MultiModal_Lidar_Camera_V2XFusion.html)** for sensor fusion.
 - [2023/03/15] Both arXiv and codebase are released!
 - [2023/02/27] BEVHeight got accepted to CVPR 2023!
 
